@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-itunes-app" content="app-id=6756589886" />
+    <meta name="description" content="Secret Santa Invitation" />
+    <meta property="og:title" content="iSanta" />
+    <meta property="og:description" content="Secret Santa Invitation" />
+    <meta property="og:image" content="https://wslabs.fr/isanta/assets/envelope.png" />
+    <meta property="og:url" content="https://wslabs.fr/isanta/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="iSanta" />
+    <meta name="twitter:description" content="Secret Santa Invitation" />
+    <meta name="twitter:image" content="https://wslabs.fr/isanta/assets/envelope.png" />
+    <meta name="twitter:url" content="https://wslabs.fr/isanta/" />
+    <title>Secret Santa Invitation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Caveat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Snowstorm/20131208/snowstorm.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background-color: #134139;
+        color: #000000;
+        font-family: "Cherry Bomb One", sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        position: relative;
+        height: 70%;
+        width: 80%;
+        max-width: 600px;
+        background-color: #f3ead1;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .invitation {
+        line-height: 1.2;
+        font-size: 20px;
+        font-family: "Caveat", cursive;
+        text-align: center;
+      }
+
+      .invitation span {
+        font-family: "Cherry Bomb One", sans-serif;
+      }
+
+      .accent {
+        color: #d62626;
+      }
+
+      .assignee {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      span {
+        text-transform: capitalize;
+      }
+
+      .stamp {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        width: 100px;
+        cursor: pointer;
+      }
+      .footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+      }
+      .footer a {
+        text-decoration: none;
+        color: #ffffff50;
+        font-family: "Cherry Bomb One", sans-serif;
+      }
+      .footer span {
+        color: #ffffff50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img
+        src="assets/stamp.png"
+        alt="Stamp"
+        class="stamp"
+        onclick="window.open('https://apps.apple.com/app/id6756589886', '_blank')"
+      />
+      <div class="invitation" id="invitation"></div>
+    </div>
+    <div class="footer">
+      <a
+        href="https://docs.google.com/document/d/153XI88bYSVCulwyZnZv-8JF0Nn4U4e7Niz5eOscKzR4/edit?usp=sharing"
+        target="_blank"
+        >Privacy policy</a
+      >
+      <span>-</span>
+      <a
+        href="https://docs.google.com/document/d/1jSkUH5yU_WS3xVIS8_YD79Rz8J-T_nM-PKDXb5rPdHw/edit?usp=sharing"
+        target="_blank"
+        >Terms of service</a
+      >
+      <span>-</span>
+      <a href="https://wslabs.fr" target="_blank">Made by WsLabs©</a>
+    </div>
+
+    <script>
+      function decode(encoded) {
+        if (!encoded) return "";
+        return encoded
+          .split("")
+          .map((charEncoded) => {
+            if (/[a-z]/.test(charEncoded)) {
+              const charCodeNormalized = charEncoded.charCodeAt(0) - 97;
+              const charCodeDecodedNormalized = (charCodeNormalized + 10 + 26) % 26;
+              const charCodeDecoded = charCodeDecodedNormalized + 97;
+              const charDecoded = String.fromCharCode(charCodeDecoded);
+              return charDecoded;
+            }
+            return charEncoded;
+          })
+          .join("");
+      }
+      const params = new URLSearchParams(window.location.search);
+      const ln = params.get("ln") || "en";
+      const r = decode(params.get("r"));
+      const t = decode(params.get("t"));
+      const l = decode(params.get("l"));
+      const d = decode(params.get("d"));
+      const a = decode(params.get("a"));
+      const b = decode(params.get("b"));
+      const o = decode(params.get("o"));
+
+      let invitation;
+
+      if (r === "" || t === "" || a === "" || o === "") {
+        invitation = `Something went wrong`;
+      } else if (ln === "fr") {
+        // French version
+        let locationPart = l ? ` à <span class="accent">${l}</span>` : "";
+        let datePart = d ? ` le <span class="accent">${d}</span>` : "";
+        let budgetPart = b ? `Le budget est de <span class="accent">${b}</span> max.<br><br>` : "";
+
+        invitation = `Bonjour <span class="accent">${r}</span>,<br><br>
+Vous avez été invité pour le Secret Santa <span class="accent">${t}</span>${locationPart}${datePart}.<br><br>
+Vous êtes assigné à offrir un cadeau à <span class="accent assignee">${a}</span>.<br><br>
+${budgetPart}Organisateur: <span class="accent">${o}</span>`;
+      } else {
+        // English version (default)
+        let locationPart = l ? ` at <span class="accent">${l}</span>` : "";
+        let datePart = d ? ` on <span class="accent">${d}</span>` : "";
+        let budgetPart = b ? `The budget is <span class="accent">${b}</span> max.<br><br>` : "";
+
+        invitation = `Hello <span class="accent">${r}</span>,<br><br>
+You have been invited to the Secret Santa "<span class="accent">${t}</span>"${locationPart}${datePart}.<br><br>
+You are assigned to give a gift to <span class="accent assignee">${a}</span>.<br><br>
+${budgetPart}Organizer: <span class="accent">${o}</span>`;
+      }
+
+      document.getElementById("invitation").innerHTML = invitation;
+    </script>
+    <script src="snowstorm.js"></script>
+    <script>
+      snowStorm.excludeMobile = false;
+    </script>
+  </body>
+</html>
